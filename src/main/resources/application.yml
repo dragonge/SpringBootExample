@@ -7,10 +7,80 @@ server:
 # mysql
 spring:
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/learning?useUnicode=true&characterEncoding=UTF-8&useSSL=false}
+    # 可以不配置，根据url自动识别，建议配置
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/learning?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=false}
     username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:root}
+    ###################以下为druid增加的配置###########################
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 初始化连接池个数
+    initialSize: 5
+    # 最小连接池个数——》已经不再使用，配置了也没效果
+    minIdle: 2
+    # 最大连接池个数
+    maxActive: 20
+    # 配置获取连接等待超时的时间，单位毫秒，缺省启用公平锁，并发效率会有所下降
+    maxWait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 300000
+    # 用来检测连接是否有效的sql，要求是一个查询语句。
+    # 如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会起作用
+    validationQuery: SELECT 1 FROM DUAL
+    # 建议配置为true，不影响性能，并且保证安全性。
+    # 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
+    testWhileIdle: true
+    # 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
+    testOnBorrow: false
+    # 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
+    testOnReturn: false
+    # 打开PSCache，并且指定每个连接上PSCache的大小
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    # 通过别名的方式配置扩展插件，多个英文逗号分隔，常用的插件有：
+    # 监控统计用的filter:stat
+    # 日志用的filter:log4j
+    # 防御sql注入的filter:wall
+    filters: stat,wall,log4j
+    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    # 合并多个DruidDataSource的监控数据
+    useGlobalDataSourceStat: true
+
+    # thymeleaf
+    thymeleaf:
+      # 启用模板缓存 避免修改模板还需要重启服务器
+      cache: false
+      # 指定模板页面存放路径 可不用配置
+      prefix: classpath:/templates/
+      # 指定模板页面名称的后缀
+      suffix: .html
+      # 模板编码 可不用配置
+      encoding: UTF-8
+      # 内容类别 可不用配置
+      content-type: text/html
+      # 应用于模板的模板模式 可不用配置
+      mode: HTML5
+
+    # redis
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: 6379
+      database: 1
+      password: ${SPRING_REDIS_PASSWORD:}
+      lettuce:
+        pool:
+          # 资源池中最大连接数
+          # 默认8，-1表示无限制；可根据服务并发redis情况及服务端的支持上限调整
+          max-active: ${SPRING_REDIS_POOL_MAX_ACTIVE:50}
+          # 资源池运行最大空闲的连接数
+          # 默认8，-1表示无限制；可根据服务并发redis情况及服务端的支持上限调整，一般建议和max-active保持一致，避免资源伸缩带来的开销
+          max-idle: ${SPRING_REDIS_POOL_MAX_IDLE:50}
+          # 当资源池连接用尽后，调用者的最大等待时间(单位为毫秒)
+          # 默认 -1 表示永不超时，设置5秒
+          max-wait: ${SPRING_REDIS_POOL_MAX_WAIT:5000}
 
   #mongoDB
   data:

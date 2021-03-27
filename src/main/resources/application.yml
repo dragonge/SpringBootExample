@@ -1,0 +1,25 @@
+# Tomcat
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 8190
+
+# mysql
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/learning?useUnicode=true&characterEncoding=UTF-8&useSSL=false}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:root}
+
+  #mongoDB
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/test
+
+# mybatis
+mybatis:
+  mapperLocations: classpath*:/**/*Mapper.xml
+  configuration:
+    mapUnderscoreToCamelCase: true
+

@@ -16,14 +16,9 @@ import java.io.Serializable;
 @Table(name = "ay_user")
 @Data
 public class AyUser implements Serializable{
-
-    //主键
     @Id
     private String id;
-    //用户名
     private String name;
-    //密码
     private String password;
-    //邮箱
     private String mail;
 }

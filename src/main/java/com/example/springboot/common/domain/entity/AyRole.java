@@ -1,5 +1,7 @@
 package com.example.springboot.common.domain.entity;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -11,25 +13,10 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "ay_role")
+@Data
 public class AyRole {
 
     @Id
     private String id;
     private String name;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

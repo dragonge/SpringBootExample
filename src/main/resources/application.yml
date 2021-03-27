@@ -82,6 +82,15 @@ spring:
           # 默认 -1 表示永不超时，设置5秒
           max-wait: ${SPRING_REDIS_POOL_MAX_WAIT:5000}
 
+  #activemq
+#  activemq:
+#    broker-url: tcp://localhost:61616
+#    in-memory: true
+#    pool:
+#      enabled: false
+#    packages:
+#      trust-all: true
+
   #mongoDB
   data:
     mongodb:

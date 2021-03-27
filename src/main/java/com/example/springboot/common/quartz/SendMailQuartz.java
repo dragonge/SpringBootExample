@@ -16,9 +16,9 @@ import java.util.List;
  * @author Ay
  * @date   2017/11/18
  */
-@Component
+//@Component
 //@Configurable
-@EnableScheduling
+//@EnableScheduling
 public class SendMailQuartz {
 
     //日志对象

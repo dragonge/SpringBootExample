@@ -1,10 +1,14 @@
 package com.example.springboot;
 
+import com.example.springboot.common.app.service.AyMoodService;
 import com.example.springboot.common.app.service.AyUserService;
+import com.example.springboot.common.domain.entity.AyMood;
 import com.example.springboot.common.domain.entity.AyUser;
 import com.example.springboot.common.app.service.AyUserAttachmentRelService;
 import com.example.springboot.common.domain.entity.AyUserAttachmentRel;
+import com.example.springboot.common.mq.AyMoodProducer;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.activemq.command.ActiveMQQueue;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,8 +22,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
+import javax.jms.Destination;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -194,5 +200,44 @@ class SpringbootApplicationTests {
 //            reLoad(3000L,3);//延迟多次重试
 //        }
 //    }
+
+    @Resource
+    private AyMoodService ayMoodService;
+
+    @Test
+    public void testAyMood(){
+        AyMood ayMood = new AyMood();
+        ayMood.setId("1");
+        ayMood.setUserId("1");
+        ayMood.setPraiseNum(0);
+        ayMood.setContent("这是我的第一天微信说说！！！");
+        ayMood.setPublishTime(new Date());
+        AyMood mood = ayMoodService.save(ayMood);
+
+    }
+
+    @Resource
+    private AyMoodProducer ayMoodProducer;
+
+    @Test
+    public void testActiveMQ() {
+
+        Destination destination = new ActiveMQQueue("ay.queue");
+        ayMoodProducer.sendMessage(destination, "hello,mq!!!");
+
+    }
+
+    @Test
+    public void testActiveMQAsynSave() {
+        AyMood ayMood = new AyMood();
+        ayMood.setId("2");
+        ayMood.setUserId("2");
+        ayMood.setPraiseNum(0);
+        ayMood.setContent("这是我的第一条微信说说！！！");
+        ayMood.setPublishTime(new Date());
+        String msg = ayMoodService.asynSave(ayMood);
+        System.out.println("异步发表说说 :" + msg);
+
+    }
 
 }
